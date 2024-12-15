@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import {
   Card,
@@ -24,10 +24,14 @@ import { Label } from "@/components/ui/Label";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { useToast } from "@/hooks/useToast";
+import Dropdown from "@/components/ui/Dropdown";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
+  }),
+  timePreference: z.string().nonempty({
+    message: "Time preference is required.",
   }),
 });
 
@@ -36,12 +40,23 @@ const Auth: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const [timezones, setTimezones] = useState([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      timePreference: "Asia/Jakarta",
     },
   });
+
+  const handleOpenDropdown = () => {
+    // Mendapatkan daftar timezone menggunakan Intl
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let tzList = (Intl as any).supportedValuesOf("timeZone");
+    setTimezones(tzList);
+    console.log("time", timezones);
+  };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
@@ -88,7 +103,30 @@ const Auth: React.FC = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit">Submit</Button>
+                  <FormField
+                    control={form.control}
+                    name="timePreference"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Time Preference, {field.value}</FormLabel>
+                        <FormControl>
+                          <Dropdown
+                            items={timezones}
+                            text={field.value}
+                            handleOpen={handleOpenDropdown}
+                            onSelect={(value) => {
+                              console.log("selected", value);
+                              form.setValue("timePreference", value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button className="flex justify-end" type="submit">
+                    {pathname === "/register" ? "Register" : "Login"}
+                  </Button>
                 </form>
               </Form>
             </div>
