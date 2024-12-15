@@ -103,27 +103,29 @@ const Auth: React.FC = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="timePreference"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Time Preference, {field.value}</FormLabel>
-                        <FormControl>
-                          <Dropdown
-                            items={timezones}
-                            text={field.value}
-                            handleOpen={handleOpenDropdown}
-                            onSelect={(value) => {
-                              console.log("selected", value);
-                              form.setValue("timePreference", value);
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {pathname === "/register" && (
+                    <FormField
+                      control={form.control}
+                      name="timePreference"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Time Preference, {field.value}</FormLabel>
+                          <FormControl>
+                            <Dropdown
+                              items={timezones}
+                              text={field.value}
+                              handleOpen={handleOpenDropdown}
+                              onSelect={(value) => {
+                                console.log("selected", value);
+                                form.setValue("timePreference", value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   <Button className="flex justify-end" type="submit">
                     {pathname === "/register" ? "Register" : "Login"}
                   </Button>
