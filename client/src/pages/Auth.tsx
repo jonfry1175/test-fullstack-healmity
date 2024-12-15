@@ -55,12 +55,13 @@ const Auth: React.FC = () => {
   });
 
   useEffect(() => {
+    console.log("trigger usef");
     if (pathname === "/login") {
       form.setValue("name", "default");
     } else {
       form.setValue("name", "");
     }
-  }, [pathname]);
+  }, [form, pathname]);
 
   const handleOpenDropdown = () => {
     // Mendapatkan daftar timezone menggunakan Intl
@@ -110,7 +111,9 @@ const Auth: React.FC = () => {
                         <FormControl>
                           <Input placeholder="jonfry118" {...field} />
                         </FormControl>
-                        <FormDescription>Must be unique.</FormDescription>
+                        {pathname === "/register" && (
+                          <FormDescription>Must be unique.</FormDescription>
+                        )}
                         <FormMessage />
                       </FormItem>
                     )}
