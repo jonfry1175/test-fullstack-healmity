@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/Label";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import { useToast } from "@/hooks/useToast";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -33,6 +34,7 @@ const formSchema = z.object({
 const Auth: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +47,9 @@ const Auth: React.FC = () => {
     console.log(values);
     if (pathname === "/register") {
       console.log("register");
+      toast({ description: "Registered successfully" });
     } else if (pathname === "/login") {
+      toast({ description: "Logged in successfully" });
       console.log("login cuuy");
     }
     navigate("/");
