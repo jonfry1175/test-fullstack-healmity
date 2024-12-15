@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import {
   Card,
@@ -50,8 +50,17 @@ const Auth: React.FC = () => {
     defaultValues: {
       username: "",
       timePreference: "Asia/Jakarta",
+      name: "",
     },
   });
+
+  useEffect(() => {
+    if (pathname === "/login") {
+      form.setValue("name", "default");
+    } else {
+      form.setValue("name", "");
+    }
+  }, [pathname]);
 
   const handleOpenDropdown = () => {
     // Mendapatkan daftar timezone menggunakan Intl
@@ -66,11 +75,13 @@ const Auth: React.FC = () => {
     if (pathname === "/register") {
       console.log("register");
       toast({ description: "Registered successfully" });
+      navigate("/login");
     } else if (pathname === "/login") {
       toast({ description: "Logged in successfully" });
       console.log("login cuuy");
+      navigate("/");
     }
-    navigate("/");
+    form.reset();
   };
 
   return (
@@ -158,7 +169,11 @@ const Auth: React.FC = () => {
             {pathname === "/register" && (
               <Label>
                 Already have an account?{" "}
-                <Link className="text-darkText" to={"/login"}>
+                <Link
+                  onClick={() => form.reset()}
+                  className="text-darkText"
+                  to={"/login"}
+                >
                   Login
                 </Link>
               </Label>
@@ -166,7 +181,11 @@ const Auth: React.FC = () => {
             {pathname === "/login" && (
               <Label>
                 Dont have an account?{" "}
-                <Link className="text-darkText" to={"/register"}>
+                <Link
+                  onClick={() => form.reset()}
+                  className="text-darkText"
+                  to={"/register"}
+                >
                   Register
                 </Link>
               </Label>
