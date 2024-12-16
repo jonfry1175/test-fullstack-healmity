@@ -11,11 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Appointment.belongsTo(models.User, { foreignKey: "creator_id" });
     }
   }
   Appointment.init({
     title: DataTypes.STRING,
-    creator_id: DataTypes.NUMBER,
+    creator_id: DataTypes.INTEGER,
     start: DataTypes.DATE,
     end: DataTypes.DATE
   }, {

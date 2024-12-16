@@ -11,15 +11,48 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Appointment, { foreignKey: "creator_id" });
     }
   }
   User.init({
-    name: DataTypes.STRING,
-    username: DataTypes.STRING,
-    preferred_timezone: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Name is required"
+        }
+      }
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        notNull: {
+          msg: "Username is required"
+        }
+      },
+    },
+    preferred_timezone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "preferred_timezone is required"
+        }
+      }
+    },
+  },
+    {
+      sequelize,
+      modelName: 'User',
+    });
+  User.beforeCreate(async (user, options) => {
+    const existsUsername = await User.findOne({ where: { username: user.username } });
+    if (existsUsername) {
+      throw new Error('Username already exists');
+    }
+  })
   return User;
 };

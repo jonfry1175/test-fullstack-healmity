@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserAppoinment.init({
-    user_id: DataTypes.NUMBER,
-    appointment_id: DataTypes.NUMBER
+    user_id: DataTypes.INTEGER,
+    appointment_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'UserAppoinment',
