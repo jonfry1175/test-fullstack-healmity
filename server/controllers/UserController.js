@@ -6,7 +6,7 @@ class UserController {
             const users = await User.findAll();
             res.status(200).json({ status: 200, data: users, message: 'success get data' });
         } catch (err) {
-            res.status(500).json(err);
+            res.status(500).json({ message: err.message, status: 500 });
         }
     }
     static async register(req, res) {

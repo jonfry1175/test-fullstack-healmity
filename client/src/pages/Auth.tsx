@@ -25,6 +25,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { useToast } from "@/hooks/useToast";
 import Dropdown from "@/components/ui/Dropdown";
+import userServices from "@/service/userService";
+import { AxiosError } from "axios";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -33,7 +35,7 @@ const formSchema = z.object({
   name: z.string().nonempty().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  timePreference: z.string().nonempty({
+  preferred_timezone: z.string().nonempty({
     message: "Time preference is required.",
   }),
 });
@@ -49,7 +51,7 @@ const Auth: React.FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      timePreference: "Asia/Jakarta",
+      preferred_timezone: "Asia/Jakarta",
       name: "",
     },
   });
@@ -71,16 +73,38 @@ const Auth: React.FC = () => {
     console.log("time", timezones);
   };
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof formSchema>
+  ): Promise<void> => {
     console.log(values);
     if (pathname === "/register") {
       console.log("register");
-      toast({ description: "Registered successfully" });
-      navigate("/login");
+      try {
+        const { data } = await userServices.register(values);
+        toast({ description: "Registered successfully" });
+        // navigate("/login");
+        console.log(data);
+      } catch (error) {
+        console.error(error.message);
+        toast({ description: "Failed to register" });
+      }
     } else if (pathname === "/login") {
-      toast({ description: "Logged in successfully" });
-      console.log("login cuuy");
-      navigate("/");
+      try {
+        const { data } = await userServices.login(values);
+        toast({ description: "Logged in successfully" });
+        // console.log(data.data.token);
+        localStorage.setItem("token", data.data.token);
+
+        navigate("/");
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.error(error.response);
+          toast({ description: error.response?.data.message });
+          return;
+        }
+        console.error(error);
+        toast({ description: "Failed to login" });
+      }
     }
     form.reset();
   };
@@ -138,7 +162,7 @@ const Auth: React.FC = () => {
                       />
                       <FormField
                         control={form.control}
-                        name="timePreference"
+                        name="preferred_timezone"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
@@ -151,7 +175,7 @@ const Auth: React.FC = () => {
                                 handleOpen={handleOpenDropdown}
                                 onSelect={(value) => {
                                   console.log("selected", value);
-                                  form.setValue("timePreference", value);
+                                  form.setValue("preferred_timezone", value);
                                 }}
                               />
                             </FormControl>

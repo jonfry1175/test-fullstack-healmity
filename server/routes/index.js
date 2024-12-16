@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const appointmentRoute = require("./appointments");
 const userRouter = require("./users");
 
 
@@ -7,6 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.use("/users", userRouter);
+router.use('/appointments', appointmentRoute);
 
 
 module.exports = router;

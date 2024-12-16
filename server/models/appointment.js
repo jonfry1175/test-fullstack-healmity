@@ -15,10 +15,42 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Appointment.init({
-    title: DataTypes.STRING,
-    creator_id: DataTypes.INTEGER,
-    start: DataTypes.DATE,
-    end: DataTypes.DATE
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "title is required"
+        }
+      }
+    },
+    creator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "creator_id is required"
+        }
+      }
+    },
+    start: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "start is required"
+        }
+      }
+    },
+    end: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "end date is required"
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'Appointment',
