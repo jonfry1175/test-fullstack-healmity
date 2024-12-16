@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const API = ({ headers = {}, params = {} } = {}): AxiosInstance => {
-  const token = localStorage.getItem("token") as string;
+  const user = JSON.parse(localStorage.getItem("user") as string) ?? {};
   const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:2222";
 
   if (!BASE_URL) {
@@ -12,7 +12,7 @@ const API = ({ headers = {}, params = {} } = {}): AxiosInstance => {
     baseURL: `${BASE_URL}/api`,
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${user.token}`,
       ...headers,
     },
     params,

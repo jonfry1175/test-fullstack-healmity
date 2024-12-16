@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/useToast";
 import Dropdown from "@/components/ui/Dropdown";
 import userServices from "@/service/userService";
 import { AxiosError } from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -95,10 +96,16 @@ const Auth: React.FC = () => {
     } else if (pathname === "/login") {
       try {
         const { data } = await userServices.login(values);
-        toast({ description: "Logged in successfully" });
+        const { token } = data.data;
         // console.log(data.data.token);
-        localStorage.setItem("token", data.data.token);
-
+        const decoded = jwtDecode(token);
+        const combinedData = {
+          ...decoded,
+          token,
+        };
+        // console.log("decoded", combinedData);
+        toast({ description: "Logged in successfully" });
+        localStorage.setItem("user", JSON.stringify(combinedData));
         navigate("/");
       } catch (error) {
         if (error instanceof AxiosError) {

@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import Appointments from "./pages/Appointments";
+import Appointments from "./pages/Appointments/Appointments";
 import { Route, Routes } from "react-router-dom";
 import Loading from "./components/Loading";
 import Auth from "./pages/Auth";

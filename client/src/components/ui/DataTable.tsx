@@ -45,34 +45,32 @@ export type Payment = {
 
 const data: Payment[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
+    id: 1,
+    title: "test",
+    creator_id: 33,
+    start: "2023-03-01T14:00:00.000Z",
+    end: "2023-03-01T15:00:00.000Z",
+    createdAt: "2024-12-16T11:50:48.059Z",
+    updatedAt: "2024-12-16T11:50:48.059Z",
+    User: null,
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
+    id: 2,
+    title: "test",
+    creator_id: 1,
+    start: "2023-03-01T14:00:00.000Z",
+    end: "2023-03-01T15:00:00.000Z",
+    createdAt: "2024-12-16T11:51:58.375Z",
+    updatedAt: "2024-12-16T11:51:58.375Z",
+    createdBy: "jonfryz",
+    User: {
+      id: 1,
+      name: "jonfryz",
+      username: "ewee",
+      preferred_timezone: "test123",
+      createdAt: "2024-12-16T09:05:27.471Z",
+      updatedAt: "2024-12-16T09:05:27.471Z",
+    },
   },
 ];
 
@@ -103,10 +101,10 @@ const columns: ColumnDef<Payment>[] = [
   //     accessorKey: "wewe",
   //   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "createdBy",
+    header: "Created By",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("createdBy") ?? "-"}</div>
     ),
   },
   {
@@ -209,6 +207,9 @@ export default function DataTable() {
           }
           className="max-w-sm"
         />
+        <Button variant="noShadow" className="ml-auto">
+          + Appointment
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="noShadow" className="ml-auto">

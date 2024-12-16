@@ -6,7 +6,12 @@ class AppointmentController {
             const appointments = await Appointment.findAll({
                 include: [User]
             });
-            res.status(200).json({ status: 200, data: appointments, message: 'success get data' });
+            // Format data
+            const data = appointments.map((appointment) => {
+                const createdBy = appointment.User ? appointment.User.username : null;
+                return { ...appointment.dataValues, createdBy };
+            });
+            res.status(200).json({ status: 200, data, message: 'success get data' });
         } catch (err) {
             res.status(500).json({ message: err.message, status: 500 });
         }

@@ -11,11 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      UserAppoinment.belongsTo(models.User, { foreignKey: "user_id" });
+      UserAppoinment.belongsTo(models.Appointment, { foreignKey: "appointment_id" });
+
     }
   }
   UserAppoinment.init({
-    user_id: DataTypes.INTEGER,
-    appointment_id: DataTypes.INTEGER
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "user_id is required"
+        }
+      }
+    },
+    appointment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "appointment_id is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'UserAppoinment',
