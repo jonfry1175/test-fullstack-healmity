@@ -1,7 +1,8 @@
 const AppointmentController = require("../controllers/AppointmentController");
+const authMiddleware = require("../middlewares/auth");
 const appointmentRoute = require("express").Router();
 
-appointmentRoute.get("/", AppointmentController.getAll);
-appointmentRoute.post("/", AppointmentController.create);
+appointmentRoute.get("/", authMiddleware, AppointmentController.getAll);
+appointmentRoute.post("/", authMiddleware, AppointmentController.create);
 
 module.exports = appointmentRoute

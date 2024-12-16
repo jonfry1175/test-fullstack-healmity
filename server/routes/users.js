@@ -1,10 +1,10 @@
 const userRouter = require("express").Router();
 const UserController = require("../controllers/UserController");
-// const authMiddleware = require("../middlewares/auth");
+const authMiddleware = require("../middlewares/auth");
 
 userRouter.get(
     "/",
-    // authMiddleware,
+    authMiddleware,
     UserController.getAll
 );
 userRouter.post("/register", UserController.register);
