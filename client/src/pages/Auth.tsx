@@ -80,12 +80,16 @@ const Auth: React.FC = () => {
     if (pathname === "/register") {
       console.log("register");
       try {
-        const { data } = await userServices.register(values);
+        await userServices.register(values);
         toast({ description: "Registered successfully" });
-        // navigate("/login");
-        console.log(data);
+        navigate("/login");
       } catch (error) {
-        console.error(error.message);
+        if (error instanceof AxiosError) {
+          console.error(error.response);
+          toast({ description: error.response?.data.message });
+          return;
+        }
+        console.error(error);
         toast({ description: "Failed to register" });
       }
     } else if (pathname === "/login") {
