@@ -4,7 +4,7 @@ class UserController {
     static async getAll(req, res) {
         try {
             const users = await User.findAll();
-            res.status(200).json(users);
+            res.status(200).json({ status: 200, data: users, message: 'success get data' });
         } catch (err) {
             res.status(500).json(err);
         }
@@ -18,14 +18,14 @@ class UserController {
                 username,
                 preferred_timezone,
             });
-            res.status(201).json(newUser);
+            res.status(201).json({ status: 201, data: newUser, message: 'success register' });
         } catch (error) {
             if (error.name === 'SequelizeValidationError') {
-                const errors = error.errors.map((err) => err.message);
-                return res.status(400).json({ errors });
+                const message = error.errors.map((err) => err.message);
+                return res.status(400).json({ message, status: 400 });
 
             }
-            res.status(500).json(error.message);
+            res.status(500).json({ message: error.message, status: 500 });
         }
     }
     static async login(req, res) {
@@ -37,10 +37,10 @@ class UserController {
             }
             const { id, name, preferred_timezone } = usernameFound
             const token = tokenGenerator({ id, name, username: usernameFound.username, preferred_timezone });
-            res.status(200).json({ token });
+            res.status(200).json({ data: { token }, message: 'success login', status: 200 });
         } catch (error) {
             console.log(error)
-            res.status(500).json(error.message);
+            res.status(500).json({ message: error.message, status: 500 });
         }
     }
 }
