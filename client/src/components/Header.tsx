@@ -20,14 +20,14 @@ const Header: React.FC<{ isLoggedIn?: boolean }> = ({ isLoggedIn }) => {
   };
 
   return (
-    <div className="p-4 gap-2">
+    <div className="p-4">
       {isLoggedIn && (
         <Label className="text-2xl">
           {" "}
           {authData?.name ? `Hi, ${authData.name}` : ""}
         </Label>
       )}
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
         <ModeToggle />
         {isLoggedIn && <Button onClick={handleLogout}>Logout</Button>}
       </div>

@@ -1,5 +1,5 @@
 import { Theme, ThemeContext } from "@/context/ThemeContext";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export function ThemeProvider({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
+  const [theme, setTheme] = React.useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
 

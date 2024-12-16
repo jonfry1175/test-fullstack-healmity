@@ -178,9 +178,7 @@ const AuthPage: React.FC = () => {
                         name="preferred_timezone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              Time Preference, {field.value}
-                            </FormLabel>
+                            <FormLabel>Time Preference</FormLabel>
                             <FormControl>
                               <Dropdown
                                 items={timezones}
