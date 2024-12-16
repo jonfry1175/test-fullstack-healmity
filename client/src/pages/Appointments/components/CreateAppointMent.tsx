@@ -43,7 +43,10 @@ const CreateAppointMent: React.FC = () => {
   });
   return (
     <div>
-      <Modal active={visibleModalCreate} setActive={() => {}}>
+      <Modal
+        active={visibleModalCreate}
+        setActive={() => setVisibleModalCreate(false)}
+      >
         <div className="flex justify-center">
           <Card className="w-[400px]">
             <CardHeader>

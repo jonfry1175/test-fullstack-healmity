@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 type Props = {
   active: boolean;
-  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  setActive: () => void;
   children: React.ReactNode;
 };
 
@@ -17,7 +17,7 @@ export default function Modal({ active, setActive, children }: Props) {
   const closeModal = () => {
     setIsVisible(false);
     setTimeout(() => {
-      setActive(false);
+      setActive();
     }, 300);
   };
 

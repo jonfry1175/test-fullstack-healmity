@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import {
   Card,
@@ -28,6 +28,8 @@ import Dropdown from "@/components/ui/Dropdown";
 import userServices from "@/service/userService";
 import { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
+import CheckAuth from "@/hoc/CheckAuth";
+import AuthDataContext from "@/context/AuthDataContext";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -41,10 +43,11 @@ const formSchema = z.object({
   }),
 });
 
-const Auth: React.FC = () => {
+const AuthPage: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { setAuthData } = useContext(AuthDataContext);
 
   const [timezones, setTimezones] = useState([]);
 
@@ -58,7 +61,6 @@ const Auth: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("trigger usef");
     if (pathname === "/login") {
       form.setValue("name", "default");
     } else {
@@ -106,7 +108,7 @@ const Auth: React.FC = () => {
         // console.log("decoded", combinedData);
         toast({ description: "Logged in successfully" });
         localStorage.setItem("user", JSON.stringify(combinedData));
-        navigate("/");
+        setAuthData(combinedData);
       } catch (error) {
         if (error instanceof AxiosError) {
           console.error(error.response);
@@ -235,4 +237,5 @@ const Auth: React.FC = () => {
   );
 };
 
+const Auth = CheckAuth(AuthPage, true);
 export default Auth;

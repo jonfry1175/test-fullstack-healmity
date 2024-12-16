@@ -1,11 +1,12 @@
+import React from "react";
 import Header from "@/components/Header";
 import DataTable from "@/components/ui/DataTable";
-import React from "react";
 import CreateAppointMent from "./components/CreateAppointMent";
 import { AppointmentsContext } from "@/context/AppointmentsContext";
+import CheckAuth from "@/hoc/CheckAuth";
 
-const Appointments: React.FC = () => {
-  const [visibleModalCreate, setVisibleModalCreate] = React.useState(true);
+const AppointmentPage: React.FC = () => {
+  const [visibleModalCreate, setVisibleModalCreate] = React.useState(false);
 
   return (
     <div className="container mx-auto">
@@ -22,4 +23,5 @@ const Appointments: React.FC = () => {
   );
 };
 
+const Appointments = CheckAuth(AppointmentPage, false);
 export default Appointments;

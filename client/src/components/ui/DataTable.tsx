@@ -35,6 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import Button from "./button/Button";
+import { AppointmentsContext } from "@/context/AppointmentsContext";
 
 export type Payment = {
   id: string;
@@ -176,6 +177,7 @@ export default function DataTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const { setVisibleModalCreate } = React.useContext(AppointmentsContext);
 
   const table = useReactTable({
     data,
@@ -207,7 +209,11 @@ export default function DataTable() {
           }
           className="max-w-sm"
         />
-        <Button variant="noShadow" className="ml-auto">
+        <Button
+          onClick={() => setVisibleModalCreate(true)}
+          variant="noShadow"
+          className="ml-auto"
+        >
           + Appointment
         </Button>
         <DropdownMenu>
