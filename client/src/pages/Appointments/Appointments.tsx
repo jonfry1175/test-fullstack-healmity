@@ -7,6 +7,12 @@ import CheckAuth from "@/hoc/CheckAuth";
 
 const AppointmentPage: React.FC = () => {
   const [visibleModalCreate, setVisibleModalCreate] = React.useState(false);
+  const [isRefetchTable, setIsRefetchTable] = React.useState(false);
+
+  const handleRefetchTable = () => {
+    setIsRefetchTable(!isRefetchTable);
+    setIsRefetchTable(!isRefetchTable);
+  };
 
   return (
     <div className="container mx-auto">
@@ -15,9 +21,9 @@ const AppointmentPage: React.FC = () => {
       >
         <Header isLoggedIn={true} />
         <div className="flex justify-center">
-          <DataTable />
+          <DataTable isRefetchTable={isRefetchTable} />
         </div>
-        <CreateAppointMent />
+        <CreateAppointMent handleRefetchTable={handleRefetchTable} />
       </AppointmentsContext.Provider>
     </div>
   );

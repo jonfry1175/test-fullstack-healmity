@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import API from "./API";
 
-type APIResponse = {
+export type APIResponse = {
   message: string;
   status: string;
 };
@@ -18,6 +18,11 @@ const AppointmentServices = {
     AxiosResponse<APIResponse & { data: Appointment[] }>
   > => {
     return API().get("/appointments/list");
+  },
+  createAppointMent: (
+    payload: Appointment & { with_user_id: number }
+  ): Promise<AxiosResponse<APIResponse>> => {
+    return API().post("/appointments", payload);
   },
 };
 

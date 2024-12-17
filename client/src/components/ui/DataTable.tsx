@@ -38,14 +38,7 @@ import AppointmentServices, {
 } from "@/service/appointmentServices";
 import { format } from "date-fns";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Appointment>[] = [
   //   {
   //     id: "select",
   //     header: ({ table }) => (
@@ -86,7 +79,7 @@ const columns: ColumnDef<Payment>[] = [
           variant="noShadow"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Participant
+          With
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -131,7 +124,11 @@ const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export default function DataTable() {
+export default function DataTable({
+  isRefetchTable,
+}: {
+  isRefetchTable?: boolean;
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -170,16 +167,17 @@ export default function DataTable() {
       console.error(error);
     }
   };
-
+  const refetch = isRefetchTable === true;
   React.useEffect(() => {
+    console.log("trigger");
     fetchAppointments();
-  }, []);
+  }, [refetch]);
 
   return (
     <div className="w-full font-base text-text">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter Participant..."
+          placeholder='Search "with"...'
           value={
             (table.getColumn("withName")?.getFilterValue() as string) ?? ""
           }

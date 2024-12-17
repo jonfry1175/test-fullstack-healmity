@@ -22,13 +22,16 @@ import { Calendar } from "@/components/ui/Calendar";
 import { cn } from "@/lib/neoBrutalism";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import userServices, { DropdownOption } from "@/service/userService";
+import { useToast } from "@/hooks/useToast";
+import AppointmentServices from "@/service/appointmentServices";
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
 
-  participant: z.string().nonempty({
+  withName: z.string().nonempty({
     message: "Time preference is required.",
   }),
   end: z.date().refine((value) => value !== null || value !== undefined, {
@@ -37,20 +40,29 @@ const formSchema = z.object({
   start: z.date().refine((value) => value !== null || value !== undefined, {
     message: "start is required.",
   }),
+  with_user_id: z.number().min(1, {
+    message: "with_user_id is required.",
+  }),
 });
 
-const CreateAppointMent: React.FC = () => {
+const CreateAppointMent: React.FC<{ handleRefetchTable: () => void }> = ({
+  handleRefetchTable,
+}) => {
+  const { toast } = useToast();
   const { visibleModalCreate, setVisibleModalCreate } =
     useContext(AppointmentsContext);
 
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
+  const [dropdownOptions, setDropdownOptions] = React.useState<
+    DropdownOption[]
+  >([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      participant: "",
+      withName: "",
     },
   });
 
@@ -62,13 +74,49 @@ const CreateAppointMent: React.FC = () => {
   const handleSelectDropdown = useCallback(
     (value: string) => {
       console.log("selected", value);
-      form.setValue("participant", value);
+      form.setValue("withName", value);
+
+      const dropdownByUsername = dropdownOptions.find(
+        (item) => item.username === form.getValues("withName")
+      );
+      if (dropdownByUsername) {
+        form.setValue("with_user_id", dropdownByUsername.id);
+        console.log("with_user_id", form.getValues("with_user_id"));
+      }
     },
-    [form]
+    [form, dropdownOptions]
   );
+
+  const handleOpenDropdown = async () => {
+    try {
+      const { data } = await userServices.getDropdownOptions();
+      setDropdownOptions(data.data);
+    } catch (error) {
+      console.error(error);
+      toast({ description: "Failed to get dropdown options" });
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    await AppointmentServices.createAppointMent(values);
+    toast({ description: "Successfully create appointment" });
+    handleRefetchTable();
+    setTimeout(() => {
+      handleCloseModal();
+    }, 500);
+    try {
+    } catch (error) {
+      console.error(error);
+      toast({ description: "Failed to create appointment" });
+    }
+  };
+
+  const handleCloseModal = () => {
+    setVisibleModalCreate(false);
+    setEndDate(undefined);
+    setStartDate(undefined);
+    form.reset();
   };
   return (
     <div>
@@ -103,15 +151,17 @@ const CreateAppointMent: React.FC = () => {
                     />
                     <FormField
                       control={form.control}
-                      name="participant"
+                      name="withName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Participant</FormLabel>
+                          <FormLabel>withName</FormLabel>
                           <FormControl>
                             <Dropdown
-                              items={["dummy1", "dummy2", "dummy3"]}
+                              items={dropdownOptions.map(
+                                (item) => item.username
+                              )}
                               text={field.value}
-                              handleOpen={() => console.log("open")}
+                              handleOpen={handleOpenDropdown}
                               onSelect={handleSelectDropdown}
                             />
                           </FormControl>
@@ -203,16 +253,7 @@ const CreateAppointMent: React.FC = () => {
                     />
 
                     <div className="flex justify-between">
-                      <Button
-                        onClick={() => {
-                          setVisibleModalCreate(false);
-                          setEndDate(undefined);
-                          setStartDate(undefined);
-                          form.reset();
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                      <Button onClick={handleCloseModal}>Cancel</Button>
                       <Button type="submit">Submit</Button>
                     </div>
                   </form>
