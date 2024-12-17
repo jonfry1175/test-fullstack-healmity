@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Appointment.belongsTo(models.User, { foreignKey: "creator_id" });
+      Appointment.belongsToMany(models.User, { through: models.UserAppoinment, foreignKey: "user_id" });
     }
   }
   Appointment.init({
@@ -30,6 +31,15 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           msg: "creator_id is required"
+        }
+      }
+    },
+    with_user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "with_user_id is required"
         }
       }
     },

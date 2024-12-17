@@ -18,6 +18,9 @@ module.exports = {
       start: {
         type: Sequelize.DATE
       },
+      with_user_id: {
+        type: Sequelize.INTEGER
+      },
       end: {
         type: Sequelize.DATE
       },
