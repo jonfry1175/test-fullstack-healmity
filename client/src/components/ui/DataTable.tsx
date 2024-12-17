@@ -33,6 +33,10 @@ import {
 } from "@/components/ui/Table";
 import Button from "./button/Button";
 import { AppointmentsContext } from "@/context/AppointmentsContext";
+import AppointmentServices, {
+  Appointment,
+} from "@/service/appointmentServices";
+import { format } from "date-fns";
 
 export type Payment = {
   id: string;
@@ -40,37 +44,6 @@ export type Payment = {
   status: "pending" | "processing" | "success" | "failed";
   email: string;
 };
-
-const data: Payment[] = [
-  {
-    id: 1,
-    title: "test",
-    creator_id: 33,
-    start: "2023-03-01T14:00:00.000Z",
-    end: "2023-03-01T15:00:00.000Z",
-    createdAt: "2024-12-16T11:50:48.059Z",
-    updatedAt: "2024-12-16T11:50:48.059Z",
-    User: null,
-  },
-  {
-    id: 2,
-    title: "test",
-    creator_id: 1,
-    start: "2023-03-01T14:00:00.000Z",
-    end: "2023-03-01T15:00:00.000Z",
-    createdAt: "2024-12-16T11:51:58.375Z",
-    updatedAt: "2024-12-16T11:51:58.375Z",
-    createdBy: "jonfryz",
-    User: {
-      id: 1,
-      name: "jonfryz",
-      username: "ewee",
-      preferred_timezone: "test123",
-      createdAt: "2024-12-16T09:05:27.471Z",
-      updatedAt: "2024-12-16T09:05:27.471Z",
-    },
-  },
-];
 
 const columns: ColumnDef<Payment>[] = [
   //   {
@@ -99,14 +72,14 @@ const columns: ColumnDef<Payment>[] = [
   //     accessorKey: "wewe",
   //   },
   {
-    accessorKey: "createdBy",
+    accessorKey: "title",
     header: "Title",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("createdBy") ?? "-"}</div>
+      <div className="capitalize">{row.getValue("title") ?? "-"}</div>
     ),
   },
   {
-    accessorKey: "Participant",
+    accessorKey: "withName",
     header: ({ column }) => {
       return (
         <Button
@@ -118,10 +91,12 @@ const columns: ColumnDef<Payment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("withName")}</div>
+    ),
   },
   {
-    accessorKey: "Start Date",
+    accessorKey: "start",
     header: ({ column }) => {
       return (
         <Button
@@ -133,10 +108,12 @@ const columns: ColumnDef<Payment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{format(row.getValue("start"), "PPP")}</div>
+    ),
   },
   {
-    accessorKey: "End date",
+    accessorKey: "end",
     header: ({ column }) => {
       return (
         <Button
@@ -148,7 +125,9 @@ const columns: ColumnDef<Payment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{format(row.getValue("end"), "PPP")}</div>
+    ),
   },
 ];
 
@@ -161,6 +140,7 @@ export default function DataTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const { setVisibleModalCreate } = React.useContext(AppointmentsContext);
+  const [data, setData] = React.useState<Appointment[]>([]);
 
   const table = useReactTable({
     data,
@@ -181,14 +161,30 @@ export default function DataTable() {
     },
   });
 
+  const fetchAppointments = async (): Promise<void> => {
+    try {
+      const { data } = await AppointmentServices.getAppointMents();
+      setData(data.data);
+      console.log(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAppointments();
+  }, []);
+
   return (
     <div className="w-full font-base text-text">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Participant..."
+          value={
+            (table.getColumn("withName")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("withName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
