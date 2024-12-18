@@ -5,6 +5,7 @@ import Loading from "./components/Loading";
 import Auth from "./pages/Auth";
 import { Toaster } from "./components/ui/Toaster";
 import AuthDataContext from "./context/AuthDataContext";
+import Docs from "./pages/Docs";
 
 const App: React.FC = () => {
   const [authData, setAuthData] = useState(
@@ -21,6 +22,7 @@ const App: React.FC = () => {
               <Route path="/" element={<Appointments />} />
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
+              <Route path="/docs" element={<Docs />} />
             </Routes>
           </div>
         </AuthDataContext.Provider>

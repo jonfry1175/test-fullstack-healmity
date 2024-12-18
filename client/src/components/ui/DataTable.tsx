@@ -127,7 +127,7 @@ const columns: ColumnDef<Appointment>[] = [
 export default function DataTable({
   isRefetchTable,
 }: {
-  isRefetchTable?: boolean;
+  isRefetchTable: boolean;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

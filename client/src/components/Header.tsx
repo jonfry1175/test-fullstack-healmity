@@ -4,10 +4,13 @@ import ModeToggle from "./ModeToggle";
 import { useToast } from "@/hooks/useToast";
 import AuthDataContext from "@/context/AuthDataContext";
 import { Label } from "./ui/Label";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // isLoggedIn?: boolean required if used in page without auth
 const Header: React.FC<{ isLoggedIn?: boolean }> = ({ isLoggedIn }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { authData, setAuthData } = useContext(AuthDataContext);
   const handleLogout = () => {
     setTimeout(() => {
@@ -29,6 +32,13 @@ const Header: React.FC<{ isLoggedIn?: boolean }> = ({ isLoggedIn }) => {
       )}
       <div className="flex justify-end gap-2">
         <ModeToggle />
+        {pathname !== "/docs" && (
+          <Button onClick={() => navigate("/docs")}>Docs</Button>
+        )}
+        {pathname === "/docs" && (
+          <Button onClick={() => navigate("/")}>Home</Button>
+        )}
+
         {isLoggedIn && <Button onClick={handleLogout}>Logout</Button>}
       </div>
     </div>
