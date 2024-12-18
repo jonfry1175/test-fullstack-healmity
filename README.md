@@ -1,10 +1,7 @@
 # Test FULLSTACK HEALMITY
 
 Soal
-![Gambar Soal](soal.jpeg)
-
-ERD
-![Gambar ERD](erd.png)
+![Gambar Soal](test.png)
 
 ## Getting Started
 
@@ -14,10 +11,10 @@ ERD
 
 ### Installing
 
-pull:
+Install pnpm
 
 ```bash
-git pull origin main
+npm install -g pnpm
 ```
 
 Navigate to the server directory:
@@ -79,3 +76,7 @@ pnpm install
 ```bash
 pnpm run dev
 ```
+
+# Page Documentation
+
+The documentation page can be viewed at http://localhost:5173/docs
